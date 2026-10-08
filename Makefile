@@ -10,3 +10,10 @@ test:
 
 doc:
 	pkgsite -http=127.0.0.1:6060
+
+tag:	VERSION
+	T="$$(cat VERSION)" && \
+	git tag $$T && \
+	git push origin tag $$T && \
+	M="$$(sed '/^module/!d; s/^module *//' go.mod)" && \
+	GOPROXY=proxy.golang.org go list -m $$M@$$T
