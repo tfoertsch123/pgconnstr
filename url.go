@@ -283,7 +283,10 @@ FOR:
 		case "user", "password", "host", "port", "dbname":
 			continue FOR
 		}
-		pairs[j] = url.QueryEscape(k) + "=" + url.QueryEscape(pgc[k])
+		// url.QueryEscape encodes a space as +. Postgres does not like that.
+		// It wants %20.
+		pairs[j] = strings.ReplaceAll(url.QueryEscape(k), "+", "%20") +
+			"=" + strings.ReplaceAll(url.QueryEscape(pgc[k]), "+", "%20")
 		j++
 	}
 	if j > 0 {
